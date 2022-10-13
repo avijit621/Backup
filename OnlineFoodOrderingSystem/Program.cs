@@ -416,8 +416,8 @@ namespace OnlineFoodOrderingSystem
 
         private static void CreateNewCustomer(string username, string password)
         {
-            Customers customer = new Customers();
-            customer.UserName = username;
+            Customer customer = new Customer();
+            customer.Username = username;
             customer.Password = password;
             FoodOrderBL foodOrderBL = new FoodOrderBL();
             try

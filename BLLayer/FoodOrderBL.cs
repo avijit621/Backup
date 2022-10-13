@@ -27,7 +27,7 @@ namespace BLLayer
             }
             return customer;
         }
-        public bool NewCustomerBL(Customers customer)
+        public bool NewCustomerBL(Customer customer)
         {
             bool newcustadded = false;
             try
