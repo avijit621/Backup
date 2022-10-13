@@ -58,21 +58,13 @@ namespace DALLayer
 
         public bool NewCustomerDAL(Customer customer)
         {
-            bool custaddedBL = false;
+            
 
-            try
-            {
-                FoodSystemEntities ctx = new FoodSystemEntities();
-                var result = ctx.Customers.FirstOrDefault(x => x.Username == customer.Username);
-                if(result != null)
-                    custaddedBL = true;
+            FoodSystemEntities ctx = new FoodSystemEntities();
+            ctx.Customers.Add(customer);
+            ctx.SaveChanges();
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return custaddedBL;
+            return true;
 
         }
     }

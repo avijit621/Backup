@@ -32,10 +32,11 @@ namespace BLLayer
             bool newcustadded = false;
             try
             {
-                // write logic here
-
-                //-----------------
-                newcustadded = true;
+                FoodOrderDAL foodOrderDAL=new FoodOrderDAL();
+                if (foodOrderDAL.NewCustomerDAL(customer))
+                    newcustadded = true;
+                else
+                    throw new Exception("Customer Creation failed");
             }
             catch (Exception ex)
             {
