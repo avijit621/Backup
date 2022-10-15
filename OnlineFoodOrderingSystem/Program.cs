@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EntityLayer;
 using DALLayer;
 using BLLayer;
+using System.Data.Entity.Core.Objects.DataClasses;
 
 namespace OnlineFoodOrderingSystem
 {
@@ -73,7 +74,7 @@ namespace OnlineFoodOrderingSystem
                     case 1:
                         DisplayFoodMenu(); break;
                     case 2:
-                        //PlaceOrder(username); 
+                        PlaceOrder(username); 
                         break;
                     case 3:
                         //ModifyOrder(username); 
@@ -266,66 +267,67 @@ namespace OnlineFoodOrderingSystem
         //    }
         //}
 
-        //private static void PlaceOrder(string username)
-        //{
-        //    FoodOrderBL foodOrderBL = new FoodOrderBL();
-        //    Customers customer = foodOrderBL.FindCustomers(username);
-        //    OrderDetails orderDetails = new OrderDetails();
-        //    IList<FoodItems> foodItemsList = new List<FoodItems>();
-        //    try
-        //    {
-        //        Console.Clear();
-        //        DisplayFoodMenu();
-        //        int choice = 1;
-        //        do
-        //        {
-        //            Console.WriteLine("\n\nDo you want to add fooditem to order?\n\t1. Yes\n\t0. No");
-        //            choice = Convert.ToInt32(Console.ReadLine());
-        //            Console.WriteLine("\nEnter FoodItem ID to add: ");
-        //            orderDetails.FoodID = Convert.ToInt32(Console.ReadLine());
-        //            Console.WriteLine("Enter quantity of the above fooditem: ");
-        //            orderDetails.Quantity = Convert.ToInt32(Console.ReadLine());
-        //            foodItemsList = foodOrderBL.AddToOrderBL(orderDetails);
-        //        } while (choice != 0);
-        //        bool addressnull = foodOrderBL.IsAddressNullBL(customer);
-        //        if (addressnull)
-        //        {
-        //            Console.WriteLine("Enter Delivery Address:");
-        //            string address = Console.ReadLine();
-        //            bool addressupdated = foodOrderBL.EditAddressBL(customer, address);
-        //            if (addressupdated)
-        //            {
-        //                Console.WriteLine("Delivary Address Updated");
-        //            }
-        //        }
-        //        Console.WriteLine("Do you want to confirm the order and proceed to payment?");
-        //        string ans = Console.ReadLine();
-        //        if (string.Equals(ans, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(ans, "yes", StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            foodOrderBL.PlaceOrderBL(customer, orderDetails, foodItemsList);
-        //            MakePayment(username);
-        //        }
-        //        else
-        //        {
-        //            ModifyOrder(username);
-        //        }
+        private static void PlaceOrder(string username)
+        {
+            FoodOrderBL foodOrderBL = new FoodOrderBL();
+            Customer customer = foodOrderBL.FindCustomers(username);
+            OrderDetail orderDetails = new OrderDetail();
+            IList<FoodItem> foodItemsList = new List<FoodItem>();
+            try
+            {
+                Console.Clear();
+                DisplayFoodMenu();
+                int choice = 1;
+                do
+                {
+                    Console.WriteLine("\n\nDo you want to add fooditem to order?\n\t1. Yes\n\t0. No");
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("\nEnter FoodItem ID to add: ");
+                    orderDetails.FoodID = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Enter quantity of the above fooditem: ");
+                    orderDetails.Quantity = Convert.ToInt32(Console.ReadLine());
+                    foodItemsList = foodOrderBL.AddToOrderBL(orderDetails);
+                } while (choice != 0);
+                bool addressnull = foodOrderBL.IsAddressNullBL(customer);
+                if (addressnull)
+                {
+                    Console.WriteLine("Enter Delivery Address:");
+                    string address = Console.ReadLine();
+                    bool addressupdated = foodOrderBL.EditAddressBL(customer, address);
+                    if (addressupdated)
+                    {
+                        Console.WriteLine("Delivary Address Updated");
+                    }
+                }
+                Console.WriteLine("Do you want to confirm the order and proceed to payment?");
+                string ans = Console.ReadLine();
+                if (string.Equals(ans, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(ans, "yes", StringComparison.OrdinalIgnoreCase))
+                {
+                    foodOrderBL.PlaceOrderBL(customer, orderDetails, foodItemsList);
+                    //MakePayment(username);
+                }
+                else
+                {
+                    //ModifyOrder(username);
+                }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         private static void DisplayFoodMenu()
         {
             FoodOrderBL foodOrderBL = new FoodOrderBL();
-            FoodItems foodItems = new FoodItems();
-            IList<FoodItems> foodItemsList = new List<FoodItems>();
+            FoodItem foodItems = new FoodItem();
+            IList<FoodItem> foodItemsList = new List<FoodItem>();
             try
             {
                 Console.Clear();
                 foodItemsList = foodOrderBL.ShowAllFoodItemsBL();
+               
                 DisplayFoodItems(foodItemsList);
                 Console.WriteLine("Choose Food Type:\n\t1. Veg\n\t2. Non-Veg\n\t3. Vegan");
                 int choice1 = Convert.ToInt32(Console.ReadLine());
@@ -358,7 +360,7 @@ namespace OnlineFoodOrderingSystem
             }
         }
 
-        private static void DisplayFoodItems(IList<FoodItems> foodItemsList)
+        private static void DisplayFoodItems(IList<FoodItem> foodItemsList)
         {
             try
             {
@@ -369,7 +371,7 @@ namespace OnlineFoodOrderingSystem
                 Console.WriteLine($"{"FoodID",-10}{"FoodName",-20}{"FoodPrice",-8}{"Category",-10}{"Restaurant",-15}{"Type",-10}");
                 foreach (var data in foodItemsList)
                 {
-                    Console.WriteLine($"{data.FoodID,-10}{data.Name,-20}{data.Price,-8}{data.Category,-10}{data.Restaurant,-15}{data.Type,-10}");
+                    Console.WriteLine($"{data.FoodId,-10}{data.Name,-20}{data.Price,-8}{data.Category,-10}{data.Restaurant,-15}{data.Type,-10}");
                 }
             }
             catch (Exception ex)
@@ -380,9 +382,10 @@ namespace OnlineFoodOrderingSystem
 
         private static void UpdateUserDetails(string username)
         {
-            Customers customer = new Customers();
+            Customer customer = new Customer();
             FoodOrderBL foodOrderBL = new FoodOrderBL();
-            //customer = foodOrderBL.FindCustomers(username);
+            customer = foodOrderBL.FindCustomers(username);
+            Console.WriteLine(customer.Username);
             try
             {
                 Console.WriteLine("\nYour customer acccount created");
@@ -394,9 +397,9 @@ namespace OnlineFoodOrderingSystem
                 Console.WriteLine("Enter Email address: ");
                 customer.Email = Console.ReadLine();
                 Console.WriteLine("Enter Gender: ");
-                customer.Gender = Convert.ToChar(Console.ReadLine());
+               customer.Gender = Convert.ToString(Console.ReadLine());
                 Console.WriteLine("Enter City: ");
-                customer.City = Console.ReadLine();
+                customer.city = Console.ReadLine();
                 Console.WriteLine("Enter Pincode: ");
                 customer.Pincode = Console.ReadLine();
                 Console.WriteLine("Enter Food Delivery Address");
@@ -411,6 +414,9 @@ namespace OnlineFoodOrderingSystem
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+                Console.WriteLine(ex.Data);
+                
             }
         }
 
@@ -430,7 +436,7 @@ namespace OnlineFoodOrderingSystem
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
         }
 

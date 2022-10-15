@@ -9,6 +9,7 @@ namespace BLLayer
 {
     public class FoodOrderBL
     {
+       
         /*
          * Customer Functionalities Business Logic
          */
@@ -44,19 +45,18 @@ namespace BLLayer
             }
             return newcustadded;
         }
-        public bool UpdateDetailsBL(Customers customer)
+        public bool UpdateDetailsBL(Customer customer)
         {
             bool updated = false;
             try
             {
-                // write logic here
-
-                //-----------------
-                updated = true;
+                FoodOrderDAL foodOrderDAL = new FoodOrderDAL();
+                if(foodOrderDAL.UpdateDetailsDAL(customer))
+                 updated = true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             return updated;
         }
@@ -152,14 +152,13 @@ namespace BLLayer
             }
             return success;
         }
-        public IList<FoodItems> ShowAllFoodItemsBL()
+        public IList<FoodItem> ShowAllFoodItemsBL()
         {
-            IList<FoodItems> list = new List<FoodItems>();
+            IList<FoodItem> list = new List<FoodItem>();
             try
             {
-                //write logic here
-
-                //----------------
+               FoodOrderDAL foodOrderDAL = new FoodOrderDAL();
+                list=foodOrderDAL.ShowAllFoodItemsDAL();
             }
             catch (Exception ex)
             {
@@ -167,14 +166,14 @@ namespace BLLayer
             }
             return list;
         }
-        public IList<FoodItems> FilteredFoodItemsBL(FoodItems foodItems, string type)
+        public IList<FoodItem> FilteredFoodItemsBL(FoodItem foodItems, string type)
         {
-            IList<FoodItems> list = new List<FoodItems>();
+            IList<FoodItem> list = new List<FoodItem>();
             try
             {
-                //write logic here
+                FoodOrderDAL foodOrderDAL = new FoodOrderDAL();
+                list = foodOrderDAL.FilteredFoodItemsDAL(foodItems, type);
 
-                //----------------
             }
             catch (Exception ex)
             {
@@ -182,9 +181,9 @@ namespace BLLayer
             }
             return list;
         }
-        public IList<FoodItems> AddToOrderBL(OrderDetails orderDetails)
+        public IList<FoodItem> AddToOrderBL(OrderDetail orderDetail)
         {
-            IList<FoodItems> list = new List<FoodItems>();
+            IList<FoodItem> list = new List<FoodItem>();
             try
             {
                 //write logic here
@@ -197,14 +196,13 @@ namespace BLLayer
             }
             return list;
         }
-        public bool IsAddressNullBL(Customers customer)
+        public bool IsAddressNullBL(Customer customer)
         {
             bool addressnull = false;
             try
             {
-                //write logic here
-
-                //----------------
+                FoodOrderDAL foodOrderDAL = new FoodOrderDAL();
+                if (foodOrderDAL.IsAddressNullDAL(customer))
                 addressnull = true;
             }
             catch (Exception ex)
@@ -213,15 +211,14 @@ namespace BLLayer
             }
             return addressnull;
         }
-        public bool EditAddressBL(Customers customer, string address)
+        public bool EditAddressBL(Customer customer, string address)
         {
             bool addressedited = false;
             try
             {
-                //write logic here
-
-                //----------------
-                addressedited = true;
+                FoodOrderDAL foodOrderDAL = new FoodOrderDAL();
+                if(foodOrderDAL.EditAddressDAL(customer, address))
+                 addressedited = true;
             }
             catch (Exception ex)
             {
@@ -229,7 +226,7 @@ namespace BLLayer
             }
             return addressedited;
         }
-        public void PlaceOrderBL(Customers customer, OrderDetails orderDetails, IList<FoodItems> foodItemsList)
+        public void PlaceOrderBL(Customer customer, OrderDetail orderDetails, IList<FoodItem> foodItemsList)
         {
             try
             {
